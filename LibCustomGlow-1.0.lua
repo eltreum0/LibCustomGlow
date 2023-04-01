@@ -52,7 +52,10 @@ GlowMaskPool.parent = GlowParent
 local TexPoolResetter = function(pool,tex)
 	local maskNum = tex:GetNumMaskTextures()
 	for i = maskNum,1 do
-		tex:RemoveMaskTexture(tex:GetMaskTexture(i))
+		--tex:RemoveMaskTexture(tex:GetMaskTexture(i))
+		if tex:GetMaskTexture(i) then
+			tex:GetMaskTexture(i):RemoveMaskTexture()
+		end
 	end
 	tex:Hide()
 	tex:ClearAllPoints()
@@ -169,7 +172,7 @@ local function GetHSVTransition(perc, c1, c2)
 end
 
 local function SetGradA(texture, direction, c1, c2)
-	texture:SetGradientAlpha(direction, c1[1], c1[2], c1[3], c1[4], c2[1], c2[2], c2[3], c2[4])
+	texture:SetGradient(direction,{r = c1[1],g = c1[2],b = c1[3],a = c1[4]},{r= c2[1],g= c2[2],b= c2[3],a= c2[4]})
 end
 
 local function DeepCopy(original)
@@ -2538,13 +2541,13 @@ local function FlashSetSplit(f, secondStage)
 		if secondStage then
 			inf.flash.list[1]:SetPoint("BOTTOM", f, "CENTER")
 			inf.flash.list[2]:SetPoint("TOP", f, "CENTER")
-			inf.flash.list[1]:SetRotation(0.785, 0.5, 0)
-			inf.flash.list[2]:SetRotation(0.785, 0.5, 1)
+			inf.flash.list[1]:SetRotation(0.785, {x=0.5,y= 0})
+			inf.flash.list[2]:SetRotation(0.785, {x=0.5,y= 1})
 		else
 			inf.flash.list[1]:SetPoint("TOP", f, "TOPLEFT")
 			inf.flash.list[2]:SetPoint("BOTTOM", f, "BOTTOMRIGHT")
-			inf.flash.list[1]:SetRotation(0.785, 0.5, 1)
-			inf.flash.list[2]:SetRotation(0.785, 0.5, 0)
+			inf.flash.list[1]:SetRotation(0.785, {x=0.5,y= 1})
+			inf.flash.list[2]:SetRotation(0.785, {x=0.5,y= 0})
 		end
 	else
 		inf.flash.Set1 = f.SetHeight
